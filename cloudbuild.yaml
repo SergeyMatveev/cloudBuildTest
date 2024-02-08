@@ -18,4 +18,3 @@ steps:
 
 images:
   - 'gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA'
-
