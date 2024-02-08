@@ -10,7 +10,6 @@ steps:
   # Получение учетных данных кластера Kubernetes и развертывание
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
-    serviceAccount: '797422842926-compute@developer.gserviceaccount.com'
     args:
     - '-c'
     - |
