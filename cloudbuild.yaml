@@ -7,26 +7,14 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA']
 
-  # Установка kubectl (если это еще не сделано)
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['version']
-
+  # Получение учетных данных кластера Kubernetes и развертывание
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
     - '-c'
     - |
-      gcloud container clusters get-credentials cluster-shmaster \
-        --zone $CLOUDSDK_COMPUTE_ZONE \
-        --project $PROJECT_ID
-    env:
-    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-shmaster'
-    - 'KUBECTL_VERSION=1.21'
-
-  # Развертывание в Kubernetes
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['apply', '-f', 'kubernetes.yaml']
+      gcloud container clusters get-credentials cluster-shmaster --zone europe-west1 --project $PROJECT_ID && \
+      kubectl apply -f kubernetes.yaml
 
 images:
   - 'gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA'
