@@ -11,9 +11,18 @@ steps:
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['version']
 
-  # Получение учетных данных кластера Kubernetes
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['container', 'clusters', 'get-credentials', 'cluster-shmaster', '--zone', 'europe-west1', '--project', '$PROJECT_ID']
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      gcloud container clusters get-credentials cluster-shmaster \
+        --zone $CLOUDSDK_COMPUTE_ZONE \
+        --project $PROJECT_ID
+    env:
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-shmaster'
+    - 'KUBECTL_VERSION=1.21'
 
   # Развертывание в Kubernetes
   - name: 'gcr.io/cloud-builders/kubectl'
